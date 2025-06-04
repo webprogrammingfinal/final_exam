@@ -110,19 +110,30 @@
   </div>
 
   <script>
-    $('#profile-form').on('submit', function(e) {
-      e.preventDefault();
-      const profile = {
-        name: $('input[name="name"]').val(),
-        major: $('input[name="major"]').val(),
-        year: $('select[name="year"]').val(),
-        history: $('textarea[name="history"]').val(),
-        intro: $('textarea[name="intro"]').val()
-      };
-      localStorage.setItem('profile', JSON.stringify(profile));
-      alert("등록 완료!");
-      location.href = "index.html";
-    });
-  </script>
+  $('#profile-form').on('submit', function(e) {
+    e.preventDefault();
+    
+    const profile = {
+      name: $('input[name="name"]').val(),
+      major: $('input[name="major"]').val(),
+      year: $('select[name="year"]').val(),
+      history: $('textarea[name="history"]').val(),
+      intro: $('textarea[name="intro"]').val()
+    };
+
+    // 기존 프로필 배열 불러오기 (없으면 빈 배열)
+    const profiles = JSON.parse(localStorage.getItem('profiles') || '[]');
+
+    // 새 프로필 추가
+    profiles.push(profile);
+
+    // 다시 저장
+    localStorage.setItem('profiles', JSON.stringify(profiles));
+
+    alert("등록 완료!");
+    location.href = "index.html";
+  });
+</script>
+
 </body>
 </html>

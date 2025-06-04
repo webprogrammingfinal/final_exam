@@ -29,12 +29,17 @@
       max-width: 900px;
       margin: auto;
     }
+    .top-right {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 0px;
+    }
     .profile-card {
       background-color: white;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       padding: 20px;
-      margin-bottom: 20px;
+      margin: 20px 0 20px;
       transition: transform 0.2s;
     }
     .profile-card:hover {
@@ -84,9 +89,11 @@
   </header>
 
   <div class="container">
-    <button class="btn" onclick="location.href='profile.html'">
-      <i class="fas fa-user-plus"></i> 프로필 등록하기
-    </button>
+    <div class="top-right">
+      <button class="btn" onclick="location.href='profile.html'">
+        <i class="fas fa-user-plus"></i> 프로필 등록하기
+      </button>
+    </div>
 
     <div id="profile-list">
       <!-- 프로필 카드가 동적으로 삽입됩니다 -->
@@ -99,31 +106,35 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    $(document).ready(function() {
-      const saved = localStorage.getItem('profile');
-      if (saved) {
-        const profile = JSON.parse(saved);
+  $(document).ready(function () {
+    const saved = localStorage.getItem('profiles');
+    const profiles = JSON.parse(saved || '[]');
+
+    if (profiles.length > 0) {
+      profiles.forEach((profile, index) => {
         $('#profile-list').append(`
-          <div class="profile-card">
+          <div class="profile-card" data-index="${index}">
             <h3>${profile.name}</h3>
             <p><strong>학과:</strong> ${profile.major}</p>
             <p><strong>학년:</strong> ${profile.year}학년</p>
-            <p><strong>이력:</strong> ${profile.history}</p>
-            <p><strong>자기소개:</strong> ${profile.intro}</p>
-            <button class="btn delete-btn" id="delete-profile">삭제</button>
+            <button class="btn delete-btn delete-profile" data-index="${index}">삭제</button>
           </div>
         `);
-      } else {
-        $('#profile-list').html('<p>등록된 프로필이 없습니다. 먼저 프로필을 등록해보세요!</p>');
-      }
-
-      $(document).on('click', '#delete-profile', function() {
-        if (confirm("정말로 이 프로필을 삭제하시겠습니까?")) {
-          localStorage.removeItem('profile');
-          location.reload();
-        }
       });
+    } else {
+      $('#profile-list').html('<p>등록된 프로필이 없습니다. 먼저 프로필을 등록해보세요!</p>');
+    }
+
+    $(document).on('click', '.delete-profile', function () {
+      const idx = $(this).data('index');
+      if (confirm("정말로 이 프로필을 삭제하시겠습니까?")) {
+        profiles.splice(idx, 1);
+        localStorage.setItem('profiles', JSON.stringify(profiles));
+        location.reload();
+      }
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>
