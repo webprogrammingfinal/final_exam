@@ -1,0 +1,17 @@
+body {
+  font-family: sans-serif;
+  margin: 20px;
+}
+.profile-card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-top: 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+@media (max-width: 600px) {
+  .profile-card {
+    font-size: 14px;
+  }
+}
+
