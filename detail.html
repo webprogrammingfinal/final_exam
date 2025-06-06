@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>프로필 상세보기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .card h2 { margin-bottom: 20px; }
+    .back-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .back-btn:hover {
+    background-color: #0056b3;
+  }
+  </style>
+</head>
+<body>
+  <div class="card" id="detail-card">
+    <!-- 프로필 데이터가 여기에 표시됩니다 -->
+  </div>
+
+  <script>
+    const index = localStorage.getItem('selectedProfileIndex');
+    const profiles = JSON.parse(localStorage.getItem('profiles') || '[]');
+    const profile = profiles[index];
+
+    if (profile) {
+      document.getElementById('detail-card').innerHTML = `
+        <h2>${profile.name}</h2>
+        <p><strong>학과:</strong> ${profile.major}</p>
+        <p><strong>학년:</strong> ${profile.year}학년</p>
+        <p><strong>이력:</strong><br>${profile.history}</p>
+        <p><strong>자기소개:</strong><br>${profile.intro}</p>
+        <br>
+        <button class="back-btn" onclick="history.back()">← 뒤로</button>
+      `;
+    } else {
+      document.getElementById('detail-card').innerHTML = '<p>잘못된 접근입니다.</p>';
+    }
+  </script>
+</body>
+</html>
