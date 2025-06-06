@@ -96,6 +96,15 @@
           <option value="6">6학년</option>
         </select>
       </label>
+      <label>연락처:
+        <select name="contact" required>
+          <option value="">선택하세요</option>
+          <option value="이메일">이메일</option>
+          <option value="전화번호">전화번호</option>
+          <option value="카카오톡">카카오톡</option>
+        </select>
+        <input type="text" name="contact-info" placeholder="연락처 정보를 입력하세요" required>
+      </label>
       <label>이력:
         <textarea name="history" placeholder="수상, 프로젝트, 스킬 등"></textarea>
       </label>
@@ -120,6 +129,8 @@
         $('input[name="name"]').val(profile.name);
         $('input[name="major"]').val(profile.major);
         $('select[name="year"]').val(profile.year);
+        $('select[name="contact"]').val(profile.contact);
+        $('input[name="contact-info"]').val(profile.contactInfo);
         $('textarea[name="history"]').val(profile.history);
         $('textarea[name="intro"]').val(profile.intro);
       }
@@ -131,6 +142,8 @@
           name: $('input[name="name"]').val(),
           major: $('input[name="major"]').val(),
           year: $('select[name="year"]').val(),
+          contact: $('select[name="contact"]').val(),
+          contactInfo: $('input[name="contact-info"]').val(),
           history: $('textarea[name="history"]').val(),
           intro: $('textarea[name="intro"]').val()
         };
