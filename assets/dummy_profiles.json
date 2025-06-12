@@ -1,0 +1,22 @@
+[
+  {
+    "name": "홍길동",
+    "major": "컴퓨터공학과",
+    "year": "3",
+    "contact": "010-1234-5678",
+    "contactInfo": "hong@example.com",
+    "history": "2023 SW마에스트로 14기\n웹 해커톤 최우수상\nReact/Node.js 프로젝트 경험",
+    "intro": "안녕하세요! 프론트엔드 개발을 좋아하는 3학년 홍길동입니다.",
+    "authCode": "1234"
+  },
+  {
+    "name": "김민지",
+    "major": "정보통신공학과",
+    "year": "2",
+    "contact": "010-5678-9999",
+    "contactInfo": "kimminji@school.ac.kr",
+    "history": "AI 기반 스마트 팜 프로젝트 참여\n딥러닝 기초 수료",
+    "intro": "AI와 IoT에 관심 있는 김민지입니다. 팀플 열심히 하겠습니다!",
+    "authCode": "5678"
+  }
+]

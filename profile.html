@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <title>프로필 등록</title>
@@ -13,10 +14,12 @@
       box-sizing: border-box;
       font-family: 'Roboto', sans-serif;
     }
+
     body {
       background: #f1f3f5;
       padding: 40px 20px;
     }
+
     .container {
       max-width: 600px;
       margin: auto;
@@ -25,18 +28,23 @@
       border-radius: 10px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     }
+
     h1 {
       text-align: center;
       margin-bottom: 30px;
       color: #343a40;
     }
+
     label {
       display: block;
       margin-bottom: 15px;
       font-weight: bold;
       color: #495057;
     }
-    input[type="text"], select, textarea {
+
+    input[type="text"],
+    select,
+    textarea {
       width: 100%;
       padding: 10px;
       border: 1px solid #ced4da;
@@ -44,10 +52,12 @@
       font-size: 16px;
       margin-top: 5px;
     }
+
     textarea {
       height: 100px;
       resize: vertical;
     }
+
     button {
       margin-top: 20px;
       width: 100%;
@@ -60,9 +70,11 @@
       cursor: pointer;
       transition: background 0.3s;
     }
+
     button:hover {
       background-color: #0056b3;
     }
+
     .back-btn {
       display: inline-block;
       margin-top: 15px;
@@ -72,9 +84,51 @@
       text-decoration: underline;
       cursor: pointer;
     }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 10px;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 20px;
+        margin-bottom: 20px;
+      }
+
+      label {
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+
+      input[type="text"],
+      select,
+      textarea {
+        font-size: 14px;
+        padding: 8px;
+      }
+
+      textarea {
+        height: 80px;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      .back-btn {
+        font-size: 14px;
+        margin-top: 12px;
+      }
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
   <div class="container">
     <h1><i class="fas fa-id-card"></i> 내 프로필 등록</h1>
@@ -120,11 +174,13 @@
 
   <script>
     $(document).ready(function () {
-      const editIndex = localStorage.getItem('editIndex');
-      const profiles = JSON.parse(localStorage.getItem('profiles') || '[]');
+      const USER_KEY = 'localProfiles';
+      const rawEditIndex = localStorage.getItem('editIndex');
+      const editIndex = rawEditIndex !== null ? Number(rawEditIndex) : null;
+      const profiles = JSON.parse(localStorage.getItem(USER_KEY) || '[]');
 
-      // 수정 모드일 경우 기존 값 채우기
-      if (editIndex !== null) {
+      // 수정 모드라면 기존 값 채우기
+      if (editIndex !== null && profiles[editIndex]) {
         const profile = profiles[editIndex];
         $('input[name="name"]').val(profile.name);
         $('input[name="major"]').val(profile.major);
@@ -148,21 +204,27 @@
           intro: $('textarea[name="intro"]').val()
         };
 
-        if (editIndex !== null) {
-          // 기존 인증번호 유지
+        if (editIndex !== null && profiles[editIndex]) {
+          // 수정 시 인증번호 유지
           newProfile.authCode = profiles[editIndex].authCode;
           profiles[editIndex] = newProfile;
           localStorage.removeItem('editIndex');
         } else {
-          newProfile.authCode = prompt("인증번호를 설정하세요");
+          const code = prompt("인증번호를 설정하세요");
+          if (!code) {
+            alert("인증번호는 필수입니다!");
+            return;
+          }
+          newProfile.authCode = code;
           profiles.push(newProfile);
         }
 
-        localStorage.setItem('profiles', JSON.stringify(profiles));
+        localStorage.setItem(USER_KEY, JSON.stringify(profiles));
         alert("등록 완료!");
         location.href = "index.html";
       });
     });
   </script>
 </body>
+
 </html>

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>캡스톤 팀원 구인</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capstone Connect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" />
   <style>
     * {
       margin: 0;
@@ -13,10 +13,12 @@
       box-sizing: border-box;
       font-family: 'Roboto', sans-serif;
     }
+
     body {
       background: linear-gradient(to right, #f8f9fa, #e9ecef);
       padding: 30px;
     }
+
     header {
       background-color: #343a40;
       color: white;
@@ -25,147 +27,251 @@
       border-radius: 10px;
       margin-bottom: 30px;
     }
+
     .container {
       max-width: 900px;
       margin: auto;
     }
+
     .top-right {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 0px;
+      margin-bottom: 20px;
     }
-    .profile-card {
+
+    .filter-select {
       background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      padding: 20px;
-      margin: 20px 0 20px;
-      transition: transform 0.2s;
+      color: #007bff;
+      border: 1px solid #007bff;
+      margin-right: 10px;
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 13px;
+      cursor: pointer;
     }
-    .profile-card:hover {
-      transform: scale(1.02);
-    }
-    .profile-card h3 {
-      margin-bottom: 10px;
-    }
+
     .btn {
-      display: inline-block;
-      padding: 10px 20px;
+      padding: 6px 12px;
       background-color: #007bff;
       color: white;
       border: none;
       border-radius: 5px;
-      text-decoration: none;
       cursor: pointer;
+      font-size: 13px;
       transition: background 0.3s;
     }
+
     .btn:hover {
       background-color: #0056b3;
     }
+
     .delete-btn {
-      margin-top: 10px;
       background-color: #dc3545;
     }
+
     .delete-btn:hover {
       background-color: #a71d2a;
     }
+
+    .profile-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin: 20px 0;
+      transition: transform 0.2s;
+      position: relative;
+    }
+
+    .profile-card:hover {
+      transform: scale(1.02);
+    }
+
+    .profile-card h3 {
+      margin-bottom: 10px;
+    }
+
+    .profile-card p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .profile-card p i {
+      margin-right: 6px;
+      color: #666;
+    }
+
+    .btn-group {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      display: flex;
+      gap: 6px;
+    }
+
     footer {
       margin-top: 40px;
       text-align: center;
       color: #666;
       font-size: 14px;
     }
-    @media (max-width: 600px) {
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 20px;
+      }
+
+      header p {
+        font-size: 14px;
+      }
+
+      .top-right {
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .filter-select,
+      .btn {
+        font-size: 12px;
+        padding: 5px 10px;
+      }
+
       .profile-card {
         padding: 15px;
+      }
+
+      .profile-card h3 {
+        font-size: 16px;
+      }
+
+      .profile-card p {
+        font-size: 13px;
+      }
+
+      footer {
+        font-size: 12px;
       }
     }
   </style>
 </head>
+
 <body>
   <header>
-    <h1>🎓 캡스톤 팀원 구인 플랫폼</h1>
-    <p>같은 목표를 가진 팀원을 찾아보세요!</p>
+    <h1>🎓 Capstone Connect</h1>
+    <p>같은 목표를 가지는 팀원을 찾아보세요!</p>
   </header>
 
   <div class="container">
+    <!-- 필터 + 등록 버튼 한 줄 -->
     <div class="top-right">
+      <select id="majorFilter" class="filter-select">
+        <option value="all">전체</option>
+      </select>
       <button class="btn" onclick="location.href='profile.html'">
         <i class="fas fa-user-plus"></i> 프로필 등록하기
       </button>
     </div>
 
-    <div id="profile-list">
-      <!-- 프로필 카드가 동적으로 삽입됩니다 -->
-    </div>
+    <!-- 프로필 목록 -->
+    <div id="profile-list"></div>
   </div>
 
   <footer>
-    &copy; 2025 Capstone Finder. All rights reserved.
+    &copy; 2025 Capstone Connect. All rights reserved.
   </footer>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-  $(document).ready(function () {
-    const saved = localStorage.getItem('profiles');
-    const profiles = JSON.parse(saved || '[]');
+  <script src="js/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      const STORAGE_KEY = 'localProfiles';
+      const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
-    if (profiles.length > 0) {
-      profiles.forEach((profile, index) => {
-        $('#profile-list').append(`
-          <div class="profile-card" data-index="${index}">
-            <h3>${profile.name}</h3>
-            <p><strong>학과:</strong> ${profile.major}</p>
-            <p><strong>학년:</strong> ${profile.year}학년</p>
-            <div style="margin-top: 10px;">
-              <button class="btn edit-btn" data-index="${index}">수정</button>
-              <button class="btn delete-btn delete-profile" data-index="${index}">삭제</button>
-            </div>
-          </div>
-        `);
+      // 고유 학과 목록 드롭다운에 삽입
+      const majors = [...new Set(profiles.map(p => p.major))];
+      majors.forEach(major => {
+        $('#majorFilter').append(`<option value="${major}">${major}</option>`);
       });
-    } else {
-      $('#profile-list').html('<p>등록된 프로필이 없습니다. 먼저 프로필을 등록해보세요!</p>');
-    }
 
-    // 삭제 버튼
-    $(document).on('click', '.delete-profile', function (e) {
-      e.stopPropagation();
-      const idx = $(this).data('index');
-      const inputCode = prompt("인증번호를 입력하세요:");
-      if (inputCode === profiles[idx].authCode) {
-        if (confirm("정말로 이 프로필을 삭제하시겠습니까?")) {
-          profiles.splice(idx, 1);
-          localStorage.setItem('profiles', JSON.stringify(profiles));
-          location.reload();
+      // 프로필 렌더링 함수
+      function renderProfiles(profileList) {
+        const $list = $('#profile-list');
+        $list.empty();
+
+        if (profileList.length === 0) {
+          $list.html('<p>조건에 맞는 프로필이 없습니다.</p>');
+          return;
         }
-      } else {
-        alert("인증번호가 올바르지 않습니다.");
+
+        profileList.forEach((profile, index) => {
+          $list.append(`
+            <div class="profile-card" data-index="${index}">
+              <div class="btn-group">
+                <button class="btn edit-btn" data-index="${index}">수정</button>
+                <button class="btn delete-btn delete-profile" data-index="${index}">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+              <h3>${profile.name}</h3>
+              <p><i class="fas fa-building-columns"></i><strong>학과:</strong> ${profile.major}</p>
+              <p><i class="fas fa-user-graduate"></i><strong>학년:</strong> ${profile.year}학년</p>
+            </div>
+          `);
+        });
       }
+
+      // 초기 전체 렌더링
+      renderProfiles(profiles);
+
+      // 학과 필터링
+      $('#majorFilter').on('change', function () {
+        const selected = $(this).val();
+        const filtered = selected === 'all'
+          ? profiles
+          : profiles.filter(p => p.major === selected);
+        renderProfiles(filtered);
+      });
+
+      // 삭제
+      $(document).on('click', '.delete-profile', function (e) {
+        e.stopPropagation();
+        const idx = $(this).data('index');
+        const code = prompt("인증번호를 입력하세요:");
+        const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        if (code === profiles[idx].authCode) {
+          if (confirm("정말로 삭제하시겠습니까?")) {
+            profiles.splice(idx, 1);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
+            location.reload();
+          }
+        } else {
+          alert("인증번호가 올바르지 않습니다.");
+        }
+      });
+
+      // 수정
+      $(document).on('click', '.edit-btn', function (e) {
+        e.stopPropagation();
+        const idx = $(this).data('index');
+        const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const code = prompt("인증번호를 입력하세요:");
+        if (code === profiles[idx].authCode) {
+          localStorage.setItem('editIndex', idx);
+          location.href = 'profile.html';
+        } else {
+          alert("인증번호가 올바르지 않습니다.");
+        }
+      });
+
+      // 상세 보기
+      $(document).on('click', '.profile-card', function () {
+        const idx = $(this).data('index');
+        localStorage.setItem('selectedProfileIndex', idx);
+        location.href = 'detail.html';
+      });
     });
-
-    // 수정 버튼
-    $(document).on('click', '.edit-btn', function (e) {
-      e.stopPropagation();
-      const idx = $(this).data('index');
-      const inputCode = prompt("인증번호를 입력하세요:");
-      if (inputCode === profiles[idx].authCode) {
-        localStorage.setItem('editIndex', idx);
-        location.href = 'profile.html';
-      } else {
-        alert("인증번호가 올바르지 않습니다.");
-      }
-    });
-
-    // 프로필 카드 클릭 시 상세보기 이동
-    $(document).on('click', '.profile-card', function () {
-      const idx = $(this).data('index');
-      localStorage.setItem('selectedProfileIndex', idx);
-      location.href = 'detail.html';
-    });
-  });
-</script>
-
-
+  </script>
 </body>
 </html>
