@@ -167,7 +167,7 @@
       </label>
       <button type="submit">등록</button>
     </form>
-    <div class="back-btn" onclick="location.href='index.html'">
+    <div class="back-btn">
       ← 메인 페이지로 돌아가기
     </div>
   </div>
@@ -178,6 +178,18 @@
       const rawEditIndex = localStorage.getItem('editIndex');
       const editIndex = rawEditIndex !== null ? Number(rawEditIndex) : null;
       const profiles = JSON.parse(localStorage.getItem(USER_KEY) || '[]');
+
+      // 메인 페이지 돌아가기 버튼 클릭 시 기존 수정 상태 및 입력값 제거
+      $('.back-btn').on('click', function () {
+        localStorage.removeItem('editIndex'); // 수정 상태 제거
+        location.href = 'index.html';         // 메인 페이지로 이동
+      });
+
+      // 수정 모드라면 프로필 등록 페이지 제목 변경
+      if (editIndex !== null && profiles[editIndex]) {
+        $('h1').text("내 프로필 수정");
+        $('title').text("프로필 수정");
+      }
 
       // 수정 모드라면 기존 값 채우기
       if (editIndex !== null && profiles[editIndex]) {
