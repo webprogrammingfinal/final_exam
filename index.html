@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -160,17 +161,18 @@
 
 <body>
   <!-- 상단 메뉴 -->
-<header style="background-color: #212529; color: white; padding: 30px 0 20px; font-family: 'Roboto', sans-serif;">
-  <div style="max-width: 1000px; margin: auto; text-align: center;">
-    <h1 style="margin-bottom: 10px;">🎓 Capstone Connect</h1>
-    <p style="margin-bottom: 20px;">같은 목표를 가지는 팀원을 찾아보세요!</p>
-    <hr style="border: none; border-top: 3px solid #666; margin: 12px 0;">
-    <nav style="display: flex; justify-content: center; gap: 40px;">
-      <a href="index.html" style="color: white; text-decoration: none; font-weight: bold; font-size: 16px;">팀원 소개</a>
-      <a href="recruit.html" style="color: white; text-decoration: none; font-weight: bold; font-size: 16px;">팀원 모집</a>
-    </nav>
-  </div>
-</header>
+  <header style="background-color: #212529; color: white; padding: 30px 0 20px; font-family: 'Roboto', sans-serif;">
+    <div style="max-width: 1000px; margin: auto; text-align: center;">
+      <h1 style="margin-bottom: 10px;">🎓 Capstone Connect</h1>
+      <p style="margin-bottom: 20px;">같은 목표를 가지는 팀원을 찾아보세요!</p>
+      <hr style="border: none; border-top: 3px solid #666; margin: 12px 0;">
+      <nav style="display: flex; justify-content: center; gap: 40px;">
+        <a href="index.html" style="color: white; text-decoration: none; font-weight: bold; font-size: 16px;">팀원 소개</a>
+        <a href="recruit.html" style="color: white; text-decoration: none; font-weight: bold; font-size: 16px;">팀원
+          모집</a>
+      </nav>
+    </div>
+  </header>
 
   <div class="container">
     <!-- 필터 + 등록 버튼 한 줄 -->
@@ -178,7 +180,7 @@
       <select id="majorFilter" class="filter-select">
         <option value="all">전체</option>
       </select>
-      <button class="btn" onclick="location.href='profile.html'">
+      <button class="btn newprofile" onclick="location.href='profile.html'">
         <i class="fas fa-user-plus"></i> 프로필 등록하기
       </button>
     </div>
@@ -198,7 +200,7 @@
       const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
       // 고유 학과 목록 드롭다운에 삽입
-      const majors = [...new Set(profiles.map(p => p.major))];
+      const majors = [...new Set(profiles.map(p => p.major.replace(/\s+/g, '')))];
       majors.forEach(major => {
         $('#majorFilter').append(`<option value="${major}">${major}</option>`);
       });
@@ -238,7 +240,7 @@
         const selected = $(this).val();
         const filtered = selected === 'all'
           ? profiles
-          : profiles.filter(p => p.major === selected);
+          : profiles.filter(p => p.major.replace(/\s+/g, '') === selected);
         renderProfiles(filtered);
       });
 
@@ -273,6 +275,12 @@
         }
       });
 
+      // 프로필 등록 페이지로 이동
+      $(document).on('click', '.newprofile', function () {
+        localStorage.removeItem('editIndex');   // 수정 상태 제거
+        location.href = 'profile.html';         // 메인 페이지로 이동
+      });
+
       // 상세 보기
       $(document).on('click', '.profile-card', function () {
         const idx = $(this).data('index');
@@ -282,4 +290,5 @@
     });
   </script>
 </body>
+
 </html>
