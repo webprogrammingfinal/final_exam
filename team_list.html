@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Capstone Recruit</title>
+  <title>Capstone Connect</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" />
   <style>
@@ -29,8 +29,8 @@
       display: flex;
       justify-content: flex-end;
       flex-wrap: wrap;
-      gap: 10px;
       margin-bottom: 20px;
+      gap: 10px;
     }
 
     .filter-select {
@@ -82,31 +82,31 @@
       font-size: 16px;
     }
 
-    .recruit-card {
+    .profile-card {
       background-color: white;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       padding: 20px;
       margin: 20px 0;
-      position: relative;
       transition: transform 0.2s;
+      position: relative;
     }
 
-    .recruit-card:hover {
+    .profile-card:hover {
       transform: scale(1.02);
     }
 
-    .recruit-card h3 {
+    .profile-card h3 {
       margin-bottom: 10px;
     }
 
-    .recruit-card p {
+    .profile-card p {
       margin: 5px 0;
       font-size: 14px;
       color: #333;
     }
 
-    .recruit-card p i {
+    .profile-card p i {
       margin-right: 6px;
       color: #666;
     }
@@ -127,35 +127,26 @@
     }
 
     @media (max-width: 768px) {
-      .main-header h1 {
-        font-size: 20px;
-      }
-
-      .main-header p {
-        font-size: 14px;
-      }
-
       .top-right {
         justify-content: center;
         flex-direction: column;
         align-items: center;
       }
 
-      .filter-select,
-      .btn {
+      .filter-select, .btn {
         font-size: 12px;
         padding: 5px 10px;
       }
 
-      .recruit-card {
+      .profile-card {
         padding: 15px;
       }
 
-      .recruit-card h3 {
+      .profile-card h3 {
         font-size: 16px;
       }
 
-      .recruit-card p {
+      .profile-card p {
         font-size: 13px;
       }
 
@@ -181,14 +172,14 @@
 
   <div class="container">
     <div class="top-right">
-      <select id="roleFilter" class="filter-select">
+      <select id="majorFilter" class="filter-select">
         <option value="all">전체</option>
       </select>
-      <button class="btn newpost">
-        <i class="fas fa-bullhorn"></i> 구인 공고 등록하기
+      <button class="btn newprofile">
+        <i class="fas fa-user-plus"></i> 프로필 등록하기
       </button>
     </div>
-    <div id="recruit-list"></div>
+    <div id="profile-list"></div>
   </div>
 
   <footer>
@@ -198,57 +189,57 @@
   <script src="js/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function () {
-      const STORAGE_KEY = 'recruitPosts';
-      const posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      const STORAGE_KEY = 'localProfiles';
+      const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
-      const roles = [...new Set(posts.map(p => p.role))].filter(Boolean);
-      roles.forEach(role => {
-        $('#roleFilter').append(`<option value="${role}">${role}</option>`);
+      const majors = [...new Set(profiles.map(p => p.major.replace(/\s+/g, '')))].filter(Boolean);
+      majors.forEach(major => {
+        $('#majorFilter').append(`<option value="${major}">${major}</option>`);
       });
 
-      function renderPosts(postList) {
-        const $list = $('#recruit-list');
+      function renderProfiles(profileList) {
+        const $list = $('#profile-list');
         $list.empty();
-
-        if (postList.length === 0) {
-          $list.html('<p>조건에 맞는 구인 공고가 없습니다.</p>');
+        if (profileList.length === 0) {
+          $list.html('<p>조건에 맞는 프로필이 없습니다.</p>');
           return;
         }
-
-        postList.forEach((post, index) => {
+        profileList.forEach((profile, index) => {
           $list.append(`
-            <div class="recruit-card" data-index="${index}">
+            <div class="profile-card" data-index="${index}">
               <div class="btn-group">
                 <button class="btn edit-btn" data-index="${index}">수정</button>
-                <button class="btn delete-btn delete-post" data-index="${index}">
+                <button class="btn delete-btn delete-profile" data-index="${index}">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
-              <h3>${post.teamName}</h3>
-              <p><i class="fas fa-lightbulb"></i><strong>프로젝트:</strong> ${post.project}</p>
-              <p><i class="fas fa-user-tag"></i><strong>모집 분야:</strong> ${post.role}</p>
+              <h3>${profile.name}</h3>
+              <p><i class="fas fa-building-columns"></i><strong>학과:</strong> ${profile.major}</p>
+              <p><i class="fas fa-user-graduate"></i><strong>학년:</strong> ${profile.year}학년</p>
             </div>
           `);
         });
       }
 
-      renderPosts(posts);
+      renderProfiles(profiles);
 
-      $('#roleFilter').on('change', function () {
+      $('#majorFilter').on('change', function () {
         const selected = $(this).val();
-        const filtered = selected === 'all' ? posts : posts.filter(p => p.role === selected);
-        renderPosts(filtered);
+        const filtered = selected === 'all'
+          ? profiles
+          : profiles.filter(p => p.major.replace(/\s+/g, '') === selected);
+        renderProfiles(filtered);
       });
 
-      $(document).on('click', '.delete-post', function (e) {
+      $(document).on('click', '.delete-profile', function (e) {
         e.stopPropagation();
         const idx = $(this).data('index');
-        const posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         const code = prompt("인증번호를 입력하세요:");
-        if (code === posts[idx].authCode) {
+        const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        if (code === profiles[idx].authCode) {
           if (confirm("정말로 삭제하시겠습니까?")) {
-            posts.splice(idx, 1);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+            profiles.splice(idx, 1);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
             location.reload();
           }
         } else {
@@ -259,25 +250,25 @@
       $(document).on('click', '.edit-btn', function (e) {
         e.stopPropagation();
         const idx = $(this).data('index');
-        const posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         const code = prompt("인증번호를 입력하세요:");
-        if (code === posts[idx].authCode) {
-          localStorage.setItem('editRecruitIndex', idx);
-          location.href = 'recruit_form.html';
+        if (code === profiles[idx].authCode) {
+          localStorage.setItem('editIndex', idx);
+          location.href = 'profile.html';
         } else {
           alert("인증번호가 올바르지 않습니다.");
         }
       });
 
-      $(document).on('click', '.newpost', function () {
-        localStorage.removeItem('editRecruitIndex');
-        location.href = 'recruit_form.html';
+      $(document).on('click', '.newprofile', function () {
+        localStorage.removeItem('editIndex');
+        location.href = 'profile.html';
       });
 
-      $(document).on('click', '.recruit-card', function () {
+      $(document).on('click', '.profile-card', function () {
         const idx = $(this).data('index');
-        localStorage.setItem('selectedRecruitIndex', idx);
-        location.href = 'recruit_detail.html';
+        localStorage.setItem('selectedProfileIndex', idx);
+        location.href = 'detail.html';
       });
     });
   </script>

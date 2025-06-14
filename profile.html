@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -126,7 +127,6 @@
       }
     }
   </style>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -167,9 +167,7 @@
       </label>
       <button type="submit">등록</button>
     </form>
-    <div class="back-btn">
-      ← 메인 페이지로 돌아가기
-    </div>
+    <div class="back-btn">← 메인 페이지로 돌아가기</div>
   </div>
 
   <script>
@@ -179,20 +177,15 @@
       const editIndex = rawEditIndex !== null ? Number(rawEditIndex) : null;
       const profiles = JSON.parse(localStorage.getItem(USER_KEY) || '[]');
 
-      // 메인 페이지 돌아가기 버튼 클릭 시 기존 수정 상태 및 입력값 제거
       $('.back-btn').on('click', function () {
-        localStorage.removeItem('editIndex'); // 수정 상태 제거
-        location.href = 'index.html';         // 메인 페이지로 이동
+        localStorage.removeItem('editIndex');
+        location.href = 'team_list.html';
       });
 
-      // 수정 모드라면 프로필 등록 페이지 제목 변경
       if (editIndex !== null && profiles[editIndex]) {
         $('h1').text("내 프로필 수정");
         $('title').text("프로필 수정");
-      }
 
-      // 수정 모드라면 기존 값 채우기
-      if (editIndex !== null && profiles[editIndex]) {
         const profile = profiles[editIndex];
         $('input[name="name"]').val(profile.name);
         $('input[name="major"]').val(profile.major);
@@ -217,7 +210,6 @@
         };
 
         if (editIndex !== null && profiles[editIndex]) {
-          // 수정 시 인증번호 유지
           newProfile.authCode = profiles[editIndex].authCode;
           profiles[editIndex] = newProfile;
           localStorage.removeItem('editIndex');
@@ -233,7 +225,7 @@
 
         localStorage.setItem(USER_KEY, JSON.stringify(profiles));
         alert("등록 완료!");
-        location.href = "index.html";
+        location.href = "team_list.html";
       });
     });
   </script>

@@ -1,219 +1,144 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
   <meta charset="UTF-8">
-  <title>프로필 상세보기</title>
+  <title>구인 공고 상세보기</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
       padding: 20px;
       background: #f4f4f4;
     }
-
     .card {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 600px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background: white; padding: 20px;
+      border-radius: 10px; max-width: 600px;
+      margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
-    .card h2 {
-      margin-bottom: 20px;
-    }
-
+    .card h2 { margin-bottom: 20px; }
     .back-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
+      margin-top: 20px; padding: 10px 20px;
+      background: #007bff; color: white;
+      border: none; border-radius: 5px;
+      font-size: 16px; cursor: pointer;
     }
-
-    .back-btn:hover {
-      background-color: #0056b3;
-    }
-
-    .comment-section {
-      margin-top: 40px;
-    }
-
+    .comment-section { margin-top: 40px; }
     .comment-section h3 {
-      margin-bottom: 20px;
-      color: #333;
+      margin-bottom: 20px; color: #333;
     }
-
     #comment-form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 20px;
-      padding: 0 10px;
+      display: flex; flex-direction: column;
+      gap: 10px; margin-top: 20px; padding: 0 10px;
     }
-
-    .comment-top-row,
-    .comment-bottom-row {
-      display: flex;
-      gap: 10px;
+    .comment-top-row, .comment-bottom-row {
+      display: flex; gap: 10px;
     }
-
     .comment-top-row input,
     .comment-bottom-row textarea,
     .comment-bottom-row button {
-      font-size: 14px;
-      border-radius: 5px;
+      font-size: 14px; border-radius: 5px;
       padding: 10px;
     }
-
     .comment-top-row input[type="text"],
     .comment-top-row input[type="password"] {
-      border: 1px solid #ccc;
-      flex: 1;
+      border: 1px solid #ccc; flex: 1;
     }
-
     .comment-bottom-row textarea {
-      border: 1px solid #ccc;
-      flex: 3;
-      resize: vertical;
-      min-height: 50px;
-      font-size: 13px;
-      padding: 8px;
+      border: 1px solid #ccc; flex: 3;
+      resize: vertical; min-height: 50px;
+      font-size: 13px; padding: 8px;
     }
-
     .comment-bottom-row button {
-      background: #007bff;
-      color: white;
-      border: none;
-      flex: 1;
-      cursor: pointer;
-      font-size: 13px;
-      padding: 8px 10px;
+      background: #007bff; color: white;
+      border: none; flex: 1; cursor: pointer;
+      font-size: 13px; padding: 8px 10px;
     }
-
     .comment-bottom-row button:hover {
-      background-color: #0056b3;
+      background: #0056b3;
     }
-
     .comment {
-      background: #f1f1f1;
-      border-radius: 5px;
-      padding: 10px;
-      margin-bottom: 10px;
+      background: #f1f1f1; border-radius: 5px;
+      padding: 10px; margin-bottom: 10px;
     }
-
-    .comment strong {
-      color: #333;
-    }
-
+    .comment strong { color: #333; }
     .comment button {
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 3px;
-      cursor: pointer;
+      background-color: #dc3545; color: white;
+      border: none; padding: 5px 10px;
+      border-radius: 3px; cursor: pointer;
       margin-top: 5px;
     }
-
     .comment button:hover {
       background-color: #a71d2a;
     }
-
-    @media (max-width: 768px) {
+     @media (max-width: 768px) {
       .card {
         padding: 15px;
       }
-
       .card h2 {
         font-size: 20px;
       }
-
       .comment-section h3 {
         font-size: 16px;
       }
-
       .comment-top-row,
       .comment-bottom-row {
         flex-direction: column;
       }
-
       .comment-top-row input,
       .comment-bottom-row textarea,
       .comment-bottom-row button {
         font-size: 14px;
         width: 100%;
       }
-
       .comment-bottom-row {
         gap: 8px;
       }
-
       .comment-bottom-row textarea {
         min-height: 80px;
       }
-
       .comment-bottom-row button {
         padding: 10px;
       }
-
       .comment {
         font-size: 14px;
       }
-
       .back-btn {
         width: 100%;
         font-size: 14px;
       }
     }
   </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-
 <body>
-  <div class="card" id="detail-card">
-
-  </div>
+  <div class="card" id="detail-card"></div>
 
   <script>
-    const USER_KEY = 'localProfiles';
-    const index = Number(localStorage.getItem('selectedProfileIndex') || -1);
-    const profiles = JSON.parse(localStorage.getItem(USER_KEY) || '[]');
-    const profile = profiles[index];
-
-    const commentKey = `comments_${index}`;
+    const STORAGE_KEY = 'recruitPosts';
+    const idx = Number(localStorage.getItem('selectedRecruitIndex') || -1);
+    const posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const post = posts[idx];
+    const commentKey = `recruit_comments_${idx}`;
     let comments = JSON.parse(localStorage.getItem(commentKey) || '[]');
 
     function renderComments() {
-      return comments.map((c, idx) => `
+      return comments.map((c, i) => `
         <div class="comment">
           <p><strong>${c.nickname}</strong>: ${c.content}</p>
-          <button class="delete-comment" data-idx="${idx}">삭제</button>
+          <button class="delete-comment" data-idx="${i}">삭제</button>
         </div>
       `).join('');
     }
 
-    if (profile) {
+    if (post) {
       document.getElementById('detail-card').innerHTML = `
-        <h2>${profile.name}</h2>
-        <p><strong>학과:</strong> ${profile.major}</p>
-        <p><strong>학년:</strong> ${profile.year}학년</p>
-        <p><strong>연락처:</strong> ${profile.contact || ''} ${profile.contactInfo || ''}</p>
-        <p><strong>이력:</strong><br>${profile.history}</p>
-        <p><strong>자기소개:</strong><br>${profile.intro}</p>
+        <h2>${post.teamName}</h2>
+        <p><strong>모집 분야:</strong> ${post.role}</p>
+        <p><strong>프로젝트:</strong><br>${post.project}</p>
 
         <div class="comment-section">
           <h3>💬 댓글</h3>
-          <div id="comment-list">
-            ${renderComments()}
-          </div>
-
+          <div id="comment-list">${renderComments()}</div>
           <form id="comment-form">
             <div class="comment-top-row">
               <input type="text" name="nickname" placeholder="닉네임" required>
@@ -237,22 +162,17 @@
       const nickname = $('input[name="nickname"]').val().trim();
       const content = $('textarea[name="content"]').val().trim();
       const auth = $('input[name="auth"]').val().trim();
-
-      if (!nickname || !content || !auth) {
-        alert("모든 항목을 입력해주세요.");
-        return;
-      }
-
+      if (!nickname || !content || !auth) return alert("모든 항목을 입력해주세요.");
       comments.push({ nickname, content, auth });
       localStorage.setItem(commentKey, JSON.stringify(comments));
       location.reload();
     });
 
     $(document).on('click', '.delete-comment', function () {
-      const idx = $(this).data('idx');
+      const i = $(this).data('idx');
       const input = prompt("댓글 삭제 인증코드를 입력하세요:");
-      if (input === comments[idx].auth) {
-        comments.splice(idx, 1);
+      if (input === comments[i].auth) {
+        comments.splice(i, 1);
         localStorage.setItem(commentKey, JSON.stringify(comments));
         location.reload();
       } else {
@@ -261,5 +181,4 @@
     });
   </script>
 </body>
-
 </html>

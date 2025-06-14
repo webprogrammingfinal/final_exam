@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>구인 공고 등록</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: #f1f3f5;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #343a40;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 15px;
+            width: 100%;
+            color: #007bff;
+            text-align: center;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+
+            label {
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+
+            input[type="text"],
+            textarea {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .back-btn {
+                font-size: 14px;
+                margin-top: 12px;
+            }
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1><i class="fas fa-bullhorn"></i> 구인 공고 등록</h1>
+        <form id="recruit-form">
+            <label>팀 이름:
+                <input type="text" name="teamName" required>
+            </label>
+            <label>모집 분야:
+                <input type="text" name="role" required>
+            </label>
+            <label>프로젝트 설명:
+                <textarea name="project" placeholder="프로젝트 목표, 사용 기술 등"></textarea>
+            </label>
+            <button type="submit">등록</button>
+        </form>
+        <div class="back-btn">← 메인 페이지로 돌아가기</div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'recruitPosts';
+        const rawIndex = localStorage.getItem('editRecruitIndex');
+        const editIndex = rawIndex !== null ? Number(rawIndex) : null;
+        const posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+        if (editIndex !== null && posts[editIndex]) {
+            $('h1').text("구인 공고 수정");
+            $('title').text("구인 공고 수정");
+            const post = posts[editIndex];
+            $('input[name="teamName"]').val(post.teamName);
+            $('input[name="role"]').val(post.role);
+            $('textarea[name="project"]').val(post.project);
+        }
+
+        $('.back-btn').click(() => {
+            localStorage.removeItem('editRecruitIndex');
+            location.href = 'recruit.html';
+        });
+
+        $('#recruit-form').on('submit', function (e) {
+            e.preventDefault();
+            const newPost = {
+                teamName: $('input[name="teamName"]').val(),
+                role: $('input[name="role"]').val(),
+                project: $('textarea[name="project"]').val()
+            };
+
+            if (editIndex !== null && posts[editIndex]) {
+                newPost.authCode = posts[editIndex].authCode;
+                posts[editIndex] = newPost;
+                localStorage.removeItem('editRecruitIndex');
+            } else {
+                const code = prompt("인증번호를 설정하세요");
+                if (!code) return alert("인증번호는 필수입니다.");
+                newPost.authCode = code;
+                posts.push(newPost);
+            }
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+            alert("등록 완료!");
+            location.href = "recruit.html";
+        });
+    </script>
+</body>
+
+</html>
