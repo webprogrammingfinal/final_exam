@@ -127,13 +127,13 @@
     }
 
     @media (max-width: 768px) {
-      .main-header h1 {
+      /* .main-header h1 {
         font-size: 20px;
       }
 
       .main-header p {
         font-size: 14px;
-      }
+      } */
 
       .top-right {
         justify-content: center;
@@ -149,6 +149,7 @@
 
       .recruit-card {
         padding: 15px;
+        margin: 20px 10px;
       }
 
       .recruit-card h3 {
@@ -201,7 +202,7 @@
       const STORAGE_KEY = 'recruitPosts';
       const posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
-      const roles = [...new Set(posts.map(p => p.role))].filter(Boolean);
+      const roles = [...new Set(posts.map(p => p.role.replace(/\s+/g, '')))].filter(Boolean);
       roles.forEach(role => {
         $('#roleFilter').append(`<option value="${role}">${role}</option>`);
       });
@@ -236,7 +237,7 @@
 
       $('#roleFilter').on('change', function () {
         const selected = $(this).val();
-        const filtered = selected === 'all' ? posts : posts.filter(p => p.role === selected);
+        const filtered = selected === 'all' ? posts : posts.filter(p => p.role.replace(/\s+/g, '') === selected);
         renderPosts(filtered);
       });
 
@@ -248,15 +249,10 @@
 
         if (code === posts[idx].authCode) {
           if (confirm("정말로 삭제하시겠습니까?")) {
-            // 공고 삭제
             posts.splice(idx, 1);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-
-            // 해당 댓글 삭제
             const commentKey = `recruit_comments_${idx}`;
             localStorage.removeItem(commentKey);
-
-            // 댓글 키 재정렬
             const allKeys = Object.keys(localStorage);
             allKeys.forEach(key => {
               const match = key.match(/^recruit_comments_(\d+)$/);

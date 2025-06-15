@@ -141,6 +141,7 @@
 
       .profile-card {
         padding: 15px;
+        margin: 20px 10px;
       }
 
       .profile-card h3 {
@@ -234,23 +235,16 @@
 
       $(document).on('click', '.delete-profile', function (e) {
         e.stopPropagation();
-
         const idx = $(this).data('index');
         const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         const code = prompt("인증번호를 입력하세요:");
 
         if (code === profiles[idx].authCode) {
           if (confirm("정말로 삭제하시겠습니까?")) {
-            // 프로필 삭제
             profiles.splice(idx, 1);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
-
-            // 해당 댓글 삭제
             const commentKey = `comments_${idx}`;
             localStorage.removeItem(commentKey);
-
-            // 댓글 key 재정렬 (index 변경 대응)
-            // profiles가 재정렬되었으므로 모든 기존 comment 키도 다시 맞춰야 함
             const updatedProfiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
             updatedProfiles.forEach((_, newIdx) => {
               const oldKey = `comments_${newIdx + 1}`;
