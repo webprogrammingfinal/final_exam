@@ -148,7 +148,7 @@
         const posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
         if (editIndex !== null && posts[editIndex]) {
-            $('h1').text("구인 공고 수정");
+            $('h1').html('<i class="fas fa-bullhorn"></i> 구인 공고 수정');
             $('title').text("구인 공고 수정");
             const post = posts[editIndex];
             $('input[name="teamName"]').val(post.teamName);

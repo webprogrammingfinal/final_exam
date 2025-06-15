@@ -183,7 +183,7 @@
       });
 
       if (editIndex !== null && profiles[editIndex]) {
-        $('h1').text("내 프로필 수정");
+        $('h1').html('<i class="fas fa-id-card"></i> 내 프로필 수정');
         $('title').text("프로필 수정");
 
         const profile = profiles[editIndex];

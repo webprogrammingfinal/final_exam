@@ -133,7 +133,8 @@
         align-items: center;
       }
 
-      .filter-select, .btn {
+      .filter-select,
+      .btn {
         font-size: 12px;
         padding: 5px 10px;
       }
@@ -233,13 +234,34 @@
 
       $(document).on('click', '.delete-profile', function (e) {
         e.stopPropagation();
+
         const idx = $(this).data('index');
-        const code = prompt("인증번호를 입력하세요:");
         const profiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const code = prompt("인증번호를 입력하세요:");
+
         if (code === profiles[idx].authCode) {
           if (confirm("정말로 삭제하시겠습니까?")) {
+            // 프로필 삭제
             profiles.splice(idx, 1);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
+
+            // 해당 댓글 삭제
+            const commentKey = `comments_${idx}`;
+            localStorage.removeItem(commentKey);
+
+            // 댓글 key 재정렬 (index 변경 대응)
+            // profiles가 재정렬되었으므로 모든 기존 comment 키도 다시 맞춰야 함
+            const updatedProfiles = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            updatedProfiles.forEach((_, newIdx) => {
+              const oldKey = `comments_${newIdx + 1}`;
+              const currentKey = `comments_${newIdx}`;
+              const data = localStorage.getItem(oldKey);
+              if (data && !localStorage.getItem(currentKey)) {
+                localStorage.setItem(currentKey, data);
+                localStorage.removeItem(oldKey);
+              }
+            });
+
             location.reload();
           }
         } else {

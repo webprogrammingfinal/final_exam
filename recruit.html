@@ -245,10 +245,32 @@
         const idx = $(this).data('index');
         const posts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         const code = prompt("인증번호를 입력하세요:");
+
         if (code === posts[idx].authCode) {
           if (confirm("정말로 삭제하시겠습니까?")) {
+            // 공고 삭제
             posts.splice(idx, 1);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+
+            // 해당 댓글 삭제
+            const commentKey = `recruit_comments_${idx}`;
+            localStorage.removeItem(commentKey);
+
+            // 댓글 키 재정렬
+            const allKeys = Object.keys(localStorage);
+            allKeys.forEach(key => {
+              const match = key.match(/^recruit_comments_(\d+)$/);
+              if (match) {
+                const originalIdx = Number(match[1]);
+                if (originalIdx > idx) {
+                  const newKey = `recruit_comments_${originalIdx - 1}`;
+                  const value = localStorage.getItem(key);
+                  localStorage.setItem(newKey, value);
+                  localStorage.removeItem(key);
+                }
+              }
+            });
+
             location.reload();
           }
         } else {
